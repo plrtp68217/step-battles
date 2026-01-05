@@ -10,23 +10,18 @@
 ## Как работает сетевая логика
 ### Когда клиент подключается к серверу, он получает **копии всех сетевых объектов** (игроков, NPC и т.д.).
 
-У ТЕБЯ на компьютере:            У Игрока2 на компьютере:        У Игрока3 на компьютере:
-┌──────────────────────┐        ┌──────────────────────┐        ┌──────────────────────┐
-│ PlayerScript(Ты)     │        │ PlayerScript(Ты)     │        │ PlayerScript(Ты)     │
-│ playerName="Вася"    │        │ playerName="Вася"    │        │ playerName="Вася"    │
-│ playerColor=красный  │        │ playerColor=красный  │        │ playerColor=красный  │
-│ isLocalPlayer=TRUE   │        │ isLocalPlayer=FALSE  │        │ isLocalPlayer=FALSE  │
-└──────────────────────┘        └──────────────────────┘        └──────────────────────┘
-│ PlayerScript(Игрок2) │        │ PlayerScript(Игрок2) │        │ PlayerScript(Игрок2) │
-│ playerName="Петя"    │        │ playerName="Петя"    │        │ playerName="Петя"    │
-│ playerColor=синий    │        │ playerColor=синий    │        │ playerColor=синий    │
-│ isLocalPlayer=FALSE  │        │ isLocalPlayer=TRUE   │        │ isLocalPlayer=FALSE  │
-└──────────────────────┘        └──────────────────────┘        └──────────────────────┘
-│ PlayerScript(Игрок3) │        │ PlayerScript(Игрок3) │        │ PlayerScript(Игрок3) │
-│ playerName="Коля"    │        │ playerName="Коля"    │        │ playerName="Коля"    │
-│ playerColor=зеленый  │        │ playerColor=зеленый  │        │ playerColor=зеленый  │
-│ isLocalPlayer=FALSE  │        │ isLocalPlayer=FALSE  │        │ isLocalPlayer=TRUE   │
-└──────────────────────┘        └──────────────────────┘        └──────────────────────┘
+| Компьютер | Объект | playerName | playerColor | isLocalPlayer |
+|-----------|--------|------------|-------------|---------------|
+| **Твой** | PlayerScript(Ты) | "Вася" | красный | **TRUE** |
+| **Твой** | PlayerScript(Игрок2) | "Петя" | синий | FALSE |
+| **Твой** | PlayerScript(Игрок3) | "Коля" | зеленый | FALSE |
+| **Игрока2** | PlayerScript(Ты) | "Вася" | красный | FALSE |
+| **Игрока2** | PlayerScript(Игрок2) | "Петя" | синий | **TRUE** |
+| **Игрока2** | PlayerScript(Игрок3) | "Коля" | зеленый | FALSE |
+| **Игрока3** | PlayerScript(Ты) | "Вася" | красный | FALSE |
+| **Игрока3** | PlayerScript(Игрок2) | "Петя" | синий | FALSE |
+| **Игрока3** | PlayerScript(Игрок3) | "Коля" | зеленый | **TRUE** |
+
 **Ключевой момент:** Каждый клиент имеет **полные копии всех игроков**, но `isLocalPlayer = true` только для своего персонажа.
 ### SyncVar - Маркированная переменная, которая автоматически синхронизируется между сервером и всеми клиентами при изменении.
 ### Важные правила
