@@ -17,10 +17,10 @@
 │ playerColor=красный  │        │ playerColor=красный  │        │ playerColor=красный  │
 │ isLocalPlayer=TRUE   │        │ isLocalPlayer=FALSE  │        │ isLocalPlayer=FALSE  │
 └──────────────────────┘        └──────────────────────┘        └──────────────────────┘
-│ PlayerScript(Игрок2) │         │ PlayerScript(Игрок2) │       │ PlayerScript(Игрок2) │
-│ playerName="Петя"    │         │ playerName="Петя"    │       │ playerName="Петя"    │
-│ playerColor=синий    │         │ playerColor=синий    │       │ playerColor=синий    │
-│ isLocalPlayer=FALSE  │         │ isLocalPlayer=TRUE   │       │ isLocalPlayer=FALSE  │
+│ PlayerScript(Игрок2) │        │ PlayerScript(Игрок2) │        │ PlayerScript(Игрок2) │
+│ playerName="Петя"    │        │ playerName="Петя"    │        │ playerName="Петя"    │
+│ playerColor=синий    │        │ playerColor=синий    │        │ playerColor=синий    │
+│ isLocalPlayer=FALSE  │        │ isLocalPlayer=TRUE   │        │ isLocalPlayer=FALSE  │
 └──────────────────────┘        └──────────────────────┘        └──────────────────────┘
 │ PlayerScript(Игрок3) │        │ PlayerScript(Игрок3) │        │ PlayerScript(Игрок3) │
 │ playerName="Коля"    │        │ playerName="Коля"    │        │ playerName="Коля"    │
