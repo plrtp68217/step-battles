@@ -44,3 +44,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 314d44f52bb20034c8a2928132976b61, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HexCell
+  <Coordinates>k__BackingField:
+    <X>k__BackingField: 0
+    <Z>k__BackingField: 0
+  _neighbors:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}

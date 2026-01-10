@@ -1,5 +1,7 @@
-﻿using UnityEngine;
+﻿using Assets.Scripts.Map.Metric;
+using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.UIElements;
 
 namespace Assets.Scripts.Map
 {
@@ -42,30 +44,15 @@ namespace Assets.Scripts.Map
             _hexMesh.Triangulate(_cells);
         }
 
-        //private void Update()
-        //{
-        //    if (Input.GetMouseButton(0))
-        //        HandleInput();
-        //}
-
-        //private void HandleInput()
-        //{
-        //    Ray inputRay = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-        //    if (Physics.Raycast(inputRay, out RaycastHit hit))
-        //    {
-        //        SetCellColorAt(hit, _touchedColor);
-        //    }
-
-        //}
-
-        public void SetCellColorAt(Vector3 point,Color color)
+        public HexCell GetCellAt(Vector3 pos)
         {
-            var pos = transform.InverseTransformPoint(point);
+            pos = transform.InverseTransformPoint(pos);
             HexCoordinates coordinates = HexCoordinates.FromPosition(pos);
             int index = coordinates.X + coordinates.Z * Width + coordinates.Z / 2;
-            HexCell cell = _cells[index];
-            cell.Color = color;
+            return _cells[index];
+        }
+        public void Refresh() 
+        {
             _hexMesh.Triangulate(_cells);
         }
 
@@ -85,12 +72,35 @@ namespace Assets.Scripts.Map
 
             cell.Color = _defaultColor;
 
+            // Заполнение соседей
+            if (x > 0)
+                cell.SetNeighbor(HexDirection.W, _cells[i - 1]);
+
+            if (z > 0)
+            {
+                if (z % 2 == 0)
+                {
+                    cell.SetNeighbor(HexDirection.SE, _cells[i - Width]);
+                    if (x > 0)
+                        cell.SetNeighbor(HexDirection.SW, _cells[i - Width - 1]);
+
+                }
+                else
+                {
+                    cell.SetNeighbor(HexDirection.SW, _cells[i - Width]);
+                    if (x < Width - 1)
+                        cell.SetNeighbor(HexDirection.SE, _cells[i - Width + 1]);
+
+                }
+            }
+
+
             Text label = Instantiate(LabelPrefab);
             // rectTranform для UI элементов
             label.rectTransform.SetParent(_gridCanvas.transform, false);
             label.rectTransform.anchoredPosition = new(pos.x, pos.z);
             label.text = cell.Coordinates.ToStringOnSeparateLines();
-
+            cell.UIRect = label.rectTransform;
             _cells[i] = cell;
         }
     }
