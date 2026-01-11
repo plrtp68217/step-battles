@@ -10,7 +10,8 @@ namespace Assets.Scripts.Map
         [field: SerializeField]
         public Text LabelPrefab { get; private set; }
 
-
+        [field: SerializeField]
+        public Texture2D NoiseSource { get; set; }
 
         [field: SerializeField]
         public int Width { get; private set; } = 6;
@@ -26,10 +27,10 @@ namespace Assets.Scripts.Map
         private Canvas _gridCanvas;
 
         private Color _defaultColor = Color.white;
-        private Color _touchedColor = Color.green;
 
         private void Awake()
         {
+            HexMetrics.NoiseSource = NoiseSource;
             _gridCanvas = GetComponentInChildren<Canvas>();
             _hexMesh = GetComponentInChildren<HexMesh>();
 
@@ -37,6 +38,12 @@ namespace Assets.Scripts.Map
             for (int z = 0, i = 0; z < Height; z++)
                 for (int x = 0; x < Width; x++)
                     CreateCell(x, z, i++);
+        }
+
+        private void OnEnable()
+        {
+            // Восстанавливаем ссылку после рекомпиляции
+            HexMetrics.NoiseSource = NoiseSource;
         }
 
         private void Start()
@@ -68,6 +75,7 @@ namespace Assets.Scripts.Map
             cell.transform.SetParent(transform, false);
             cell.transform.localPosition = pos;
 
+            cell.Elevation = 0;
             cell.Coordinates = HexCoordinates.FromOffsetCoordinates(x, z);
 
             cell.Color = _defaultColor;
@@ -102,6 +110,8 @@ namespace Assets.Scripts.Map
             label.text = cell.Coordinates.ToStringOnSeparateLines();
             cell.UIRect = label.rectTransform;
             _cells[i] = cell;
+
+
         }
     }
 }

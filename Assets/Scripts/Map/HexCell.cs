@@ -16,16 +16,26 @@ namespace Assets.Scripts.Map
             set
             {
                 _elevation = value;
-                Vector3 cellPos = transform.localPosition;
-                cellPos.y = value * HexMetrics.ELEVATION_STEP;
-                transform.localPosition = cellPos;
+                Vector3 position = transform.localPosition;
+                position.y = value * HexMetrics.ELEVATION_STEP;
 
-                Vector3 uiPosition = UIRect.localPosition;
-                // Потому что canvas повернут, надо менять z
-                uiPosition.z = _elevation * -HexMetrics.ELEVATION_STEP;
-                UIRect.localPosition = uiPosition;
+                // Добавляем шум к высоте ячейки
+                position.y += (HexMetrics.SampleNoise(position).y * 2f - 1f) *
+                              HexMetrics.ELEVATION_PERTURB_STRENGTH;
+
+                transform.localPosition = position;
+
+                // Проверяем, что UI Rect уже назначен
+                if (UIRect != null)
+                {
+                    Vector3 uiPosition = UIRect.localPosition;
+                    uiPosition.z = -position.y;
+                    UIRect.localPosition = uiPosition;
+                }
             }
         }
+
+        public Vector3 Position { get => transform.localPosition; }
         public Color Color { get; set; }
         public RectTransform UIRect { get; set; }
 

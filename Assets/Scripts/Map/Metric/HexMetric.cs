@@ -4,7 +4,9 @@ namespace Assets.Scripts.Map.Metric
 {
     public static class HexMetrics
     {
-        public const float SOLID_FACTOR = 0.75f;
+
+        // Треугольники
+        public const float SOLID_FACTOR = 0.8f;
         public const float BLEND_FACTOR = 1f - SOLID_FACTOR;
 
         public const float OuterRadius = 10f;
@@ -21,7 +23,27 @@ namespace Assets.Scripts.Map.Metric
             new(0f, 0f, OuterRadius),
         };
 
-        public const float ELEVATION_STEP = 5f;
+
+        // Шум
+        public const float CELL_PERTURB_STRENGTH = 4f;
+        public const float ELEVATION_PERTURB_STRENGTH = 1.5f;
+        public const float NOISE_SCALE = 0.003f;
+
+        public static Texture2D NoiseSource;
+        public static Vector4 SampleNoise(Vector3 position)
+        {
+            if (NoiseSource== null)
+                return Vector4.zero;
+
+            return NoiseSource.GetPixelBilinear(
+                position.x * NOISE_SCALE,
+                position.z * NOISE_SCALE
+            );
+        }
+
+
+        // Высоты
+        public const float ELEVATION_STEP = 3f;
         public const int TERRACES_PER_SLOPE = 2;
         public const int TERRACE_STEP = TERRACES_PER_SLOPE * 2 + 1;
         public const float HORRIZONTAL_TERRACE_STEP_SIZE = 1f / TERRACE_STEP;
