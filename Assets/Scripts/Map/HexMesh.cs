@@ -1,7 +1,6 @@
 ﻿using Assets.Scripts.Map.Metric;
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEditor.Searcher.SearcherWindow.Alignment;
 
 namespace Assets.Scripts.Map
 {
@@ -9,10 +8,9 @@ namespace Assets.Scripts.Map
     public sealed class HexMesh : MonoBehaviour
     {
         private Mesh _hexMesh;
-        private List<Vector3> _vertices;
-        private List<int> _triangles;
-
-        private List<Color> _colors;
+        private static readonly List<Vector3> _vertices = new();
+        private static readonly List<int> _triangles = new();
+        private static readonly List<Color> _colors = new();
 
         private MeshCollider _meshCollider;
 
@@ -22,10 +20,6 @@ namespace Assets.Scripts.Map
             {
                 name = "Hex Mesh",
             };
-
-            _vertices = new();
-            _triangles = new();
-            _colors = new();
 
             GetComponent<MeshFilter>().mesh = _hexMesh;
 
@@ -154,28 +148,6 @@ namespace Assets.Scripts.Map
                     TriangulateCorner(v5, nextNeighbor, v2, cell, v4, neighbor);
                 }
             }
-        }
-        // Триангуляция уступов между ребрами
-        private void TriangulateEdgeTerraces(
-            EdgeVertices begin, HexCell beginCell,
-            EdgeVertices end, HexCell endCell
-        )
-        {
-            EdgeVertices e2 = EdgeVertices.TerraceLerp(begin, end, 1);
-            Color c2 = HexMetrics.TerraceLerp(beginCell.Color, endCell.Color, 1);
-
-            TriangulateEdgeStrip(begin, beginCell.Color, e2, c2);
-
-            for (int i = 2; i < HexMetrics.TERRACE_STEP; i++)
-            {
-                EdgeVertices e1 = e2;
-                Color c1 = c2;
-                e2 = EdgeVertices.TerraceLerp(begin, end, i);
-                c2 = HexMetrics.TerraceLerp(beginCell.Color, endCell.Color, i);
-                TriangulateEdgeStrip(e1, c1, e2, c2);
-            }
-
-            TriangulateEdgeStrip(e2, c2, end, endCell.Color);
         }
 
         // Заполняет угол тремя ячейками, где два ребра — склоны (формирует "лестницу" уступов)
@@ -345,29 +317,6 @@ namespace Assets.Scripts.Map
             AddQuad(v3, v4, endLeft, endRight);
             AddQuadColor(c2, endCell.Color);
 
-        }
-
-        private void TriangulateEdgeFan(Vector3 center, EdgeVertices edge, Color color)
-        {
-            AddTriangle(center, edge.v1, edge.v2);
-            AddTriangleColor(color);
-            AddTriangle(center, edge.v2, edge.v3);
-            AddTriangleColor(color);
-            AddTriangle(center, edge.v3, edge.v4);
-            AddTriangleColor(color);
-        }
-
-        private void TriangulateEdgeStrip(
-                EdgeVertices e1, Color c1,
-                EdgeVertices e2, Color c2
-        )
-        {
-            AddQuad(e1.v1, e1.v2, e2.v1, e2.v2);
-            AddQuadColor(c1, c2);
-            AddQuad(e1.v2, e1.v3, e2.v2, e2.v3);
-            AddQuadColor(c1, c2);
-            AddQuad(e1.v3, e1.v4, e2.v3, e2.v4);
-            AddQuadColor(c1, c2);
         }
 
         private void AddQuad(Vector3 v1, Vector3 v2, Vector3 v3, Vector3 v4)

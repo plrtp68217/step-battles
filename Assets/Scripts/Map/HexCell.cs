@@ -1,20 +1,25 @@
 using Assets.Scripts.Map.Metric;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Assets.Scripts.Map
 {
     public sealed class HexCell : MonoBehaviour
     {
-
         [field: SerializeField]
         public HexCoordinates Coordinates { get; set; }
 
-        private int _elevation;
+        public HexGridChunk Chunk { get; set; } 
+
+        private int _elevation = int.MinValue;
         public int Elevation
         {
             get => _elevation;
             set
             {
+                if (_elevation == value)
+                    return;
+
                 _elevation = value;
                 Vector3 position = transform.localPosition;
                 position.y = value * HexMetrics.ELEVATION_STEP;
@@ -25,18 +30,32 @@ namespace Assets.Scripts.Map
 
                 transform.localPosition = position;
 
-                // Проверяем, что UI Rect уже назначен
                 if (UIRect != null)
                 {
                     Vector3 uiPosition = UIRect.localPosition;
                     uiPosition.z = -position.y;
                     UIRect.localPosition = uiPosition;
                 }
+
+                Refresh();
+            }
+        }
+
+        private Color _color;
+        public Color Color
+        {
+            get => _color;
+            set
+            {
+                if (_color == value) // Проверяем, изменился ли цвет
+                    return;
+
+                _color = value;
+                Refresh(); // Вызываем обновление
             }
         }
 
         public Vector3 Position { get => transform.localPosition; }
-        public Color Color { get; set; }
         public RectTransform UIRect { get; set; }
 
         [SerializeField]
@@ -53,6 +72,23 @@ namespace Assets.Scripts.Map
             _neighbors[(int)direction] = cell;
             cell._neighbors[(int)direction.Opposite()] = this;
         }
+
+        private void Refresh()
+        {
+            if (Chunk != null)
+            {
+                Chunk.Refresh(); // Обновляем текущий чанк
+
+                // Обновляем соседние чанки, если нужно
+                for (int i = 0; i < _neighbors.Length; i++)
+                {
+                    HexCell neighbor = _neighbors[i];
+                    if (neighbor != null && neighbor.Chunk != Chunk)
+                    {
+                        neighbor.Chunk.Refresh();
+                    }
+                }
+            }
+        }
     }
 }
-

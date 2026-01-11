@@ -45,7 +45,7 @@ namespace Assets.Scripts.Map.MapEditor
         {
             cell.Color = _activeColor;
             cell.Elevation = _activeElevation;
-            HexGrid.Refresh();
+            //HexGrid.Refresh();
         }
         public void SetElevation(float elevation)
         {

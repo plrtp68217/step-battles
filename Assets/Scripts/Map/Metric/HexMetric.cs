@@ -4,6 +4,9 @@ namespace Assets.Scripts.Map.Metric
 {
     public static class HexMetrics
     {
+        // Чанки
+        public const int CHUNK_SIZE_X = 5;
+        public const int CHUNK_SIZE_Z = 5;
 
         // Треугольники
         public const float SOLID_FACTOR = 0.8f;
