@@ -1,25 +1,22 @@
-﻿Shader "Custom/VertexColorURP"
+Shader "Custom/VertexColorURP_EdgeContrast"
 {
-    /*
-        _BaseColor — цвет материала
-        _BaseMap — текстура
-        Значения редактируются в иснпекторе
-    */
     Properties
     {
-        _BaseColor ("Color", Color) = (1,1,1,1)
+        _BaseColor ("Base Color", Color) = (1,1,1,1)
         _BaseMap ("Texture", 2D) = "white" {}
+
+        _EdgeStrength ("Edge Strength", Range(0,2)) = 0.6
+        _EdgePower ("Edge Sharpness", Range(1,8)) = 3
     }
 
     SubShader
     {
-        //этот шейдер ТОЛЬКО для URP
         Tags
         {
             "RenderPipeline"="UniversalPipeline"
             "RenderType"="Opaque"
         }
-        //Pass — один проход рендеринга
+
         Pass
         {
             HLSLPROGRAM
@@ -28,18 +25,19 @@
 
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
 
-            //ДАННЫЕ ВЕРШИН (Mesh -> GPU)
             struct Attributes
             {
                 float4 positionOS : POSITION;
+                float3 normalOS : NORMAL;
                 float2 uv : TEXCOORD0;
                 float4 color : COLOR;
             };
-            //ДАННЫЕ МЕЖДУ ШЕЙДЕРАМИ
+
             struct Varyings
             {
                 float4 positionHCS : SV_POSITION;
-                float2 uv : TEXCOORD0;
+                float3 normalWS : TEXCOORD0;
+                float2 uv : TEXCOORD1;
                 float4 color : COLOR;
             };
 
@@ -47,22 +45,33 @@
             SAMPLER(sampler_BaseMap);
 
             float4 _BaseColor;
+            float _EdgeStrength;
+            float _EdgePower;
 
-            //ВЕРШИННЫЙ ШЕЙДЕР
             Varyings vert (Attributes IN)
             {
                 Varyings OUT;
                 OUT.positionHCS = TransformObjectToHClip(IN.positionOS.xyz);
+                OUT.normalWS = normalize(TransformObjectToWorldNormal(IN.normalOS));
                 OUT.uv = IN.uv;
                 OUT.color = IN.color;
                 return OUT;
             }
 
-            //ФРАГМЕНТНЫЙ ШЕЙДЕР
             half4 frag (Varyings IN) : SV_Target
             {
                 half4 tex = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, IN.uv);
-                return tex * _BaseColor * IN.color;
+                half4 col = tex * _BaseColor * IN.color;
+
+                // Edge factor based on normal direction
+                float edge = 1.0 - abs(IN.normalWS.y);
+                edge = pow(edge, _EdgePower);
+
+                // Darken edges slightly
+                col.rgb *= (1.0 - edge * _EdgeStrength);
+                col.rgb = min(col.rgb, 1.0);
+
+                return col;
             }
             ENDHLSL
         }

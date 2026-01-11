@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Material_VertexColors
-  m_Shader: {fileID: 4800000, guid: 4565b466b297c7e4988fed81f4a8441a, type: 3}
+  m_Name: Material_VertexColorsEdgeContrast
+  m_Shader: {fileID: 4800000, guid: c210f1f50cc84d64593621ef65b72639, type: 3}
   m_Parent: {fileID: 2100000, guid: 1bf59ef64a50b9c4da59003f3a5befe0, type: 2}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -27,6 +27,8 @@ Material:
     m_TexEnvs: []
     m_Ints: []
     m_Floats:
+    - _EdgePower: 1.3
+    - _EdgeStrength: 0.7
     - _ShowWire: 1
     - _WireWidth: 0.008
     m_Colors: []
