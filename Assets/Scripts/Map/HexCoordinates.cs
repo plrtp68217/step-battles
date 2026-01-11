@@ -12,7 +12,7 @@ namespace Assets.Scripts.Map
         public int Z { get; private set; }
         public readonly int Y => -X - Z;
 
-        private HexCoordinates(int x, int y)
+        public HexCoordinates(int x, int y)
         {
             X = x;
             Z = y;
@@ -26,9 +26,9 @@ namespace Assets.Scripts.Map
         public static HexCoordinates FromPosition(Vector3 pos)
         {
             // Я тут не вникал
-            float x = pos.x / (HexMetrics.InnerRadius * 2f);
+            float x = pos.x / (HexMetrics.INNER_RADIUS * 2f);
             float y = -x;
-            float offset = pos.z / (HexMetrics.InnerRadius * 3f);
+            float offset = pos.z / (HexMetrics.INNER_RADIUS * 3f);
             x -= offset;
             y -= offset;
 

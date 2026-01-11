@@ -12,8 +12,10 @@ namespace Assets.Scripts.Map.MapEditor
 
         [field: SerializeField]
         public HexGrid HexGrid { get; private set; }
+        [field: SerializeField]
+        public int BrushSize { get; private set; } = 2;
 
-        private Color _activeColor;
+        private Color? _activeColor;
         private int _activeElevation;
 
         private void Awake()
@@ -33,19 +35,50 @@ namespace Assets.Scripts.Map.MapEditor
         private void HandleInput()
         {
             Ray inputRay = Camera.main.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(inputRay, out var hit)) 
+            if (Physics.Raycast(inputRay, out RaycastHit hit))
             {
-                var cell = HexGrid.GetCellAt(hit.point);
-                EditCell(cell);
+                EditCells(HexGrid.GetCellAt(hit.point));
             }
+        }
+        //private void HandleInput()
+        //{
+        //    Ray inputRay = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+        //    Plane mapPlane = new(Vector3.up, HexGrid.transform.position);
+
+        //    if (mapPlane.Raycast(inputRay, out float distance))
+        //    {
+        //        Vector3 hitPoint = inputRay.GetPoint(distance);
+        //        HexCell cell = HexGrid.GetCellAt(hitPoint);
+        //        if (cell != null)
+        //            EditCells(cell);
+        //    }
+        //}
+
+        private void EditCells(HexCell center)
+        {
+            int centerX = center.Coordinates.X;
+            int centerZ = center.Coordinates.Z;
+
+            for (int r = 0, z = centerZ - BrushSize; z <= centerZ; z++, r++)
+                for (int x = centerX - r; x <= centerX + BrushSize; x++)
+                    EditCell(HexGrid.GetCellAt(new HexCoordinates(x, z)));
+
+
+            for (int r = 0, z = centerZ + BrushSize; z > centerZ; z--, r++)
+                for (int x = centerX - BrushSize; x <= centerX + r; x++)
+                    EditCell(HexGrid.GetCellAt(new HexCoordinates(x, z)));
+
 
         }
 
-        private void EditCell(HexCell cell) 
+        private void EditCell(HexCell cell)
         {
-            cell.Color = _activeColor;
+            if (cell == null) return;
+            if (_activeColor.HasValue)
+                cell.Color = _activeColor.Value;
+
             cell.Elevation = _activeElevation;
-            //HexGrid.Refresh();
         }
         public void SetElevation(float elevation)
         {
@@ -53,6 +86,11 @@ namespace Assets.Scripts.Map.MapEditor
         }
         public void SelectColor(int index)
         {
+            if (index < 0) 
+            {
+                _activeColor = null;
+                return;
+            }
             _activeColor = Colors[index];
         }
     }

@@ -20,20 +20,20 @@ namespace Assets.Scripts.Map
         public void AddCell(int index, HexCell cell)
         {
             _cells[index] = cell;
-            cell.Chunk = this; // Добавляем эту строку
+            cell.Chunk = this;
             cell.transform.SetParent(transform, false);
             cell.UIRect.SetParent(_gridCanvas.transform, false);
         }
 
         public void Refresh()
         {
-            enabled = true; // Включаем компонент для обновления в LateUpdate
+            enabled = true; // Включаем компонент для обновления
         }
 
         private void LateUpdate()
         {
             _hexMesh.Triangulate(_cells);
-            enabled = false; // Отключаем после обновления
+            enabled = false; // Отключаем компонент для обновления (Update, LateUpdate не вызывается)
         }
     }
 }

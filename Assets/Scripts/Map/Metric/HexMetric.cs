@@ -5,6 +5,7 @@ namespace Assets.Scripts.Map.Metric
     public static class HexMetrics
     {
         // Чанки
+        // 5 на 5 клеток
         public const int CHUNK_SIZE_X = 5;
         public const int CHUNK_SIZE_Z = 5;
 
@@ -12,18 +13,18 @@ namespace Assets.Scripts.Map.Metric
         public const float SOLID_FACTOR = 0.8f;
         public const float BLEND_FACTOR = 1f - SOLID_FACTOR;
 
-        public const float OuterRadius = 10f;
-        public const float InnerRadius = OuterRadius * 0.866025404f;
+        public const float OUTER_RADIUS = 10f;
+        public const float INNER_RADIUS = OUTER_RADIUS * 0.866025404f;
 
         public static Vector3[] Corners = {
-            new(0f, 0f, OuterRadius),
-            new(InnerRadius, 0f, 0.5f * OuterRadius),
-            new(InnerRadius, 0f, -0.5f * OuterRadius),
-            new(0f, 0f, -OuterRadius),
-            new(-InnerRadius, 0f, -0.5f * OuterRadius),
-            new(-InnerRadius, 0f, 0.5f * OuterRadius),
+            new(0f, 0f, OUTER_RADIUS),
+            new(INNER_RADIUS, 0f, 0.5f * OUTER_RADIUS),
+            new(INNER_RADIUS, 0f, -0.5f * OUTER_RADIUS),
+            new(0f, 0f, -OUTER_RADIUS),
+            new(-INNER_RADIUS, 0f, -0.5f * OUTER_RADIUS),
+            new(-INNER_RADIUS, 0f, 0.5f * OUTER_RADIUS),
             // Повторяем первый для соединения последнего треугольника
-            new(0f, 0f, OuterRadius),
+            new(0f, 0f, OUTER_RADIUS),
         };
 
 

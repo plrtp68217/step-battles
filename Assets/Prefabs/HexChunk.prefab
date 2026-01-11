@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 6562438933666311327}
   - component: {fileID: 8521175385289992034}
   m_Layer: 0
-  m_Name: HexGridChunk
+  m_Name: HexChunk
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -205,7 +205,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 1bf59ef64a50b9c4da59003f3a5befe0, type: 2}
+  - {fileID: 2100000, guid: 2b23643130c606e4a9038fed1e9b5571, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

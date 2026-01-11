@@ -68,12 +68,28 @@ namespace Assets.Scripts.Map
             return _cells[index];
         }
 
+        public HexCell GetCellAt(HexCoordinates coordinates)
+        {
+            int z = coordinates.Z;
+            if (z < 0 || z >= _cellCountZ)
+            {
+                return null;
+            }
+            int x = coordinates.X + z / 2;
+            if (x < 0 || x >= _cellCountX)
+            {
+                return null;
+            }
+            return _cells[x + z * _cellCountX];
+        }
+
+
         private void CreateCell(int x, int z, int i)
         {
             Vector3 pos;
-            pos.x = (x + z * 0.5f - z / 2) * HexMetrics.InnerRadius * 2f;
+            pos.x = (x + z * 0.5f - z / 2) * HexMetrics.INNER_RADIUS * 2f;
             pos.y = 0;
-            pos.z = z * HexMetrics.OuterRadius * 1.5f;
+            pos.z = z * HexMetrics.OUTER_RADIUS * 1.5f;
 
             HexCell cell = _cells[i] = Instantiate(CellPrefab);
             cell.transform.localPosition = pos;
